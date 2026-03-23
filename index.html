@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Johnson Industries LLC — IT Security & Consulting</title>
+<meta name="description" content="IT security audits, infrastructure support, and human-centered training for small businesses in the greater St. Cloud, MN area.">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; transition: background 0.5s, color 0.5s; }
+
+/* ===== THEME VARIABLES ===== */
+:root {
+  --accent: #0fa97a;
+  --accent2: #0c8a63;
+  --accent-glow: rgba(15,169,122,0.10);
+  --accent-glow2: rgba(15,169,122,0.05);
+  --accent-border: rgba(15,169,122,0.25);
+  --accent-bg: rgba(15,169,122,0.06);
+  --accent-shadow: rgba(15,169,122,0.15);
+  --bg-main: #f7f7f5;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f0f2f0;
+  --bg-nav: rgba(247,247,245,0.88);
+  --text-primary: #1a1d24;
+  --text-muted: #5c6170;
+  --border: #e0e2e6;
+  --btn-primary-text: #ffffff;
+  --grain-opacity: 0.018;
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  --info-card-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+[data-theme="dark"] {
+  --accent: #3ee8b5;
+  --accent2: #1bb88a;
+  --accent-glow: rgba(62,232,181,0.08);
+  --accent-glow2: rgba(62,232,181,0.04);
+  --accent-border: rgba(62,232,181,0.2);
+  --accent-bg: rgba(62,232,181,0.08);
+  --accent-shadow: rgba(62,232,181,0.2);
+  --bg-main: #0a0c10;
+  --bg-card: #12151c;
+  --bg-card-hover: #181c26;
+  --bg-nav: rgba(10,12,16,0.88);
+  --text-primary: #e8e6e1;
+  --text-muted: #8a8d96;
+  --border: #1e222d;
+  --btn-primary-text: #0a0c10;
+  --grain-opacity: 0.028;
+  --card-shadow: none;
+  --info-card-shadow: none;
+}
+
+body { background: var(--bg-main); color: var(--text-primary); }
+::selection { background: var(--accent); color: var(--btn-primary-text); }
+a { color: var(--accent); text-decoration: none; }
+
+/* ===== GRAIN OVERLAY ===== */
+.grain {
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  pointer-events:none; z-index:9999;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ===== NAV ===== */
+.nav {
+  position: fixed; top:0; left:0; right:0; z-index:100;
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: all 0.4s;
+  padding: 0 24px;
+}
+.nav.scrolled { background: var(--bg-nav); border-bottom-color: var(--border); }
+.nav-inner { max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:72px; }
+.nav-logo { display:flex; align-items:center; gap:10px; cursor:pointer; text-decoration:none; color: var(--text-primary); }
+.nav-logo-icon {
+  width:36px; height:36px; border-radius:8px; background:var(--accent);
+  display:flex; align-items:center; justify-content:center;
+  font-weight:700; color:var(--btn-primary-text); font-size:18px;
+  font-family:'Instrument Serif', serif; transition: background 0.4s;
+}
+.nav-logo-text { font-weight:600; font-size:17px; letter-spacing:-0.02em; }
+.nav-links { display:flex; gap:32px; align-items:center; }
+.nav-link {
+  color:var(--text-muted); cursor:pointer; font-size:14px; font-weight:500;
+  letter-spacing:0.02em; transition:color 0.2s; background:none; border:none;
+  font-family:'DM Sans',sans-serif;
+}
+.nav-link:hover { color:var(--text-primary); }
+
+/* ===== THEME TOGGLE ===== */
+.theme-toggle {
+  position:relative; width:56px; height:30px; border-radius:15px; border:none;
+  cursor:pointer; background:var(--accent-bg); transition:background 0.4s;
+  display:flex; align-items:center; padding:3px; flex-shrink:0; outline:none;
+}
+.theme-toggle .track-icon { position:absolute; font-size:11px; transition:opacity 0.3s; line-height:1; }
+.theme-toggle .track-sun { left:8px; }
+.theme-toggle .track-moon { right:8px; }
+[data-theme="light"] .track-sun { opacity:0.8; }
+[data-theme="light"] .track-moon { opacity:0.3; }
+[data-theme="dark"] .track-sun { opacity:0.3; }
+[data-theme="dark"] .track-moon { opacity:0.8; }
+.theme-toggle .thumb {
+  width:24px; height:24px; border-radius:50%; background:var(--accent);
+  transition: transform 0.35s cubic-bezier(.22,1,.36,1), background 0.4s, box-shadow 0.4s;
+  box-shadow: 0 2px 10px var(--accent-shadow);
+  position:relative; z-index:2;
+}
+[data-theme="dark"] .theme-toggle .thumb { transform: translateX(26px); }
+
+/* ===== BUTTONS ===== */
+.btn-primary {
+  background:var(--accent); color:var(--btn-primary-text); font-weight:600;
+  border:none; padding:14px 32px; border-radius:6px; cursor:pointer;
+  font-size:15px; letter-spacing:0.02em; transition:all 0.3s;
+  font-family:'DM Sans',sans-serif; display:inline-block; text-align:center;
+}
+.btn-primary:hover { background:var(--accent2); transform:translateY(-1px); box-shadow:0 8px 30px var(--accent-shadow); }
+.btn-outline {
+  background:transparent; color:var(--accent); font-weight:500;
+  border:1.5px solid var(--accent); padding:13px 30px; border-radius:6px;
+  cursor:pointer; font-size:15px; transition:all 0.3s;
+  font-family:'DM Sans',sans-serif; display:inline-block; text-align:center;
+}
+.btn-outline:hover { background:var(--accent-bg); }
+
+/* ===== MOBILE NAV ===== */
+.mobile-controls { display:none; align-items:center; gap:12px; }
+.hamburger { background:none; border:none; color:var(--text-primary); font-size:24px; cursor:pointer; display:flex; align-items:center; }
+.mobile-menu {
+  display:none; background:var(--bg-card); border-top:1px solid var(--border);
+  padding:20px 24px; flex-direction:column; gap:20px; transition:background 0.4s;
+}
+.mobile-menu.open { display:flex; }
+
+/* ===== HERO ===== */
+.hero { position:relative; min-height:100vh; display:flex; align-items:center; padding:120px 24px 80px; overflow:hidden; }
+.hero-glow {
+  position:absolute; top:-200px; right:-200px; width:700px; height:700px;
+  background:radial-gradient(circle, var(--accent-glow) 0%, transparent 70%); pointer-events:none;
+}
+.hero-glow-2 {
+  position:absolute; bottom:-300px; left:-200px; width:600px; height:600px;
+  background:radial-gradient(circle, var(--accent-glow2) 0%, transparent 70%); pointer-events:none;
+}
+.hero-inner { max-width:1200px; margin:0 auto; width:100%; position:relative; z-index:2; }
+.hero-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--accent-bg); border:1px solid var(--accent-border);
+  border-radius:100px; padding:8px 18px 8px 12px; margin-bottom:32px;
+}
+.hero-badge-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); display:inline-block; }
+.hero-badge-text { font-size:13px; font-weight:500; color:var(--accent); letter-spacing:0.04em; }
+.hero-title {
+  font-family:'Instrument Serif', serif; font-size:68px; font-weight:400;
+  line-height:1.08; letter-spacing:-0.03em; max-width:800px; margin-bottom:24px;
+}
+.hero-title .accent { color:var(--accent); }
+.hero-subtitle { font-size:18px; color:var(--text-muted); max-width:560px; line-height:1.7; margin-bottom:40px; }
+.hero-buttons { display:flex; gap:16px; flex-wrap:wrap; }
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+.anim-1 { animation: fadeUp 0.8s cubic-bezier(.22,1,.36,1) 0.1s both; }
+.anim-2 { animation: fadeUp 0.8s cubic-bezier(.22,1,.36,1) 0.25s both; }
+.anim-3 { animation: fadeUp 0.8s cubic-bezier(.22,1,.36,1) 0.4s both; }
+.anim-4 { animation: fadeUp 0.8s cubic-bezier(.22,1,.36,1) 0.55s both; }
+
+.fade-in { opacity:0; transform:translateY(32px); transition: opacity 0.7s cubic-bezier(.22,1,.36,1), transform 0.7s cubic-bezier(.22,1,.36,1); }
+.fade-in.visible { opacity:1; transform:translateY(0); }
+.fade-in.d1 { transition-delay:0.1s; }
+.fade-in.d2 { transition-delay:0.2s; }
+.fade-in.d3 { transition-delay:0.3s; }
+.fade-in.d4 { transition-delay:0.4s; }
+
+/* ===== STATS ===== */
+.stats-bar { border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:48px 24px; transition:border-color 0.4s; }
+.stats-row { max-width:1000px; margin:0 auto; display:flex; justify-content:space-around; align-items:center; gap:48px; }
+.stat-box { text-align:center; }
+.stat-num { font-family:'Instrument Serif',serif; font-size:48px; color:var(--accent); line-height:1; }
+.stat-label { font-size:13px; color:var(--text-muted); margin-top:8px; font-weight:500; letter-spacing:0.04em; text-transform:uppercase; }
+
+/* ===== SERVICES ===== */
+.services { padding:100px 24px; max-width:1200px; margin:0 auto; }
+.section-label { font-size:13px; font-weight:600; color:var(--accent); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:16px; }
+.section-title {
+  font-family:'Instrument Serif', serif; font-size:44px; font-weight:400;
+  letter-spacing:-0.02em; margin-bottom:16px; line-height:1.15;
+}
+.section-subtitle { font-size:16px; color:var(--text-muted); max-width:560px; line-height:1.7; margin-bottom:56px; }
+.services-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.service-card {
+  background:var(--bg-card); border:1px solid var(--border); border-radius:12px;
+  padding:36px; cursor:pointer; min-height:280px; display:flex; flex-direction:column;
+  transition:all 0.4s cubic-bezier(.22,1,.36,1); box-shadow: var(--card-shadow);
+}
+.service-card:hover, .service-card.active { border-color:var(--accent); transform:translateY(-4px); background:var(--bg-card-hover); }
+.service-icon { font-size:32px; margin-bottom:16px; }
+.service-subtitle { font-size:12px; font-weight:600; color:var(--accent); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:8px; }
+.service-title { font-size:22px; font-weight:600; margin-bottom:12px; letter-spacing:-0.01em; }
+.service-desc { font-size:15px; color:var(--text-muted); line-height:1.65; margin-bottom:20px; flex:1; }
+.service-detail { display:flex; align-items:center; gap:10px; font-size:13px; color:var(--text-muted); margin-bottom:8px; }
+.service-detail-dot { color:var(--accent); font-size:10px; }
+
+/* ===== WHY US ===== */
+.why-us { padding:100px 24px; background:var(--bg-card); transition:background 0.5s; }
+.why-us-inner { max-width:1200px; margin:0 auto; }
+.why-grid { display:grid; grid-template-columns:1fr 1fr; gap:48px; }
+.why-card { border-left:2px solid var(--border); padding-left:24px; transition:border-color 0.4s; }
+.why-card:hover { border-left-color:var(--accent); }
+.why-num { font-family:'Instrument Serif',serif; font-size:36px; color:var(--accent); opacity:0.4; margin-bottom:12px; }
+.why-title { font-size:20px; font-weight:600; margin-bottom:10px; letter-spacing:-0.01em; }
+.why-desc { font-size:15px; color:var(--text-muted); line-height:1.7; }
+
+/* ===== ABOUT ===== */
+.about { padding:100px 24px; max-width:1200px; margin:0 auto; }
+.about-grid { display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center; }
+.about-text p { font-size:16px; color:var(--text-muted); line-height:1.8; margin-bottom:20px; }
+.info-card {
+  background:var(--bg-card); border:1px solid var(--border); border-radius:16px;
+  padding:48px; display:flex; flex-direction:column; gap:28px;
+  transition:background 0.4s, border-color 0.4s; box-shadow:var(--info-card-shadow);
+}
+.info-row { display:flex; justify-content:space-between; align-items:center; padding-bottom:20px; border-bottom:1px solid var(--border); }
+.info-row:last-child { padding-bottom:0; border-bottom:none; }
+.info-label { font-size:14px; color:var(--text-muted); font-weight:500; }
+.info-value { font-size:14px; font-weight:600; color:var(--text-primary); }
+
+/* ===== CONTACT ===== */
+.contact { padding:100px 24px; background:var(--bg-card); transition:background 0.5s; }
+.contact-inner { max-width:800px; margin:0 auto; text-align:center; }
+.contact-icon {
+  width:64px; height:64px; border-radius:16px; background:var(--accent-bg);
+  border:1px solid var(--accent-border); display:flex; align-items:center;
+  justify-content:center; margin:0 auto 32px; font-size:28px;
+}
+.contact-buttons { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-bottom:48px; }
+.contact-info { display:flex; justify-content:center; gap:48px; flex-wrap:wrap; }
+.contact-item { display:flex; align-items:center; gap:10px; font-size:14px; color:var(--text-muted); }
+
+/* ===== FOOTER ===== */
+.footer { border-top:1px solid var(--border); padding:64px 24px 40px; transition:border-color 0.4s; }
+.footer-grid { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:64px; }
+.footer-logo { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+.footer-logo-icon {
+  width:32px; height:32px; border-radius:6px; background:var(--accent);
+  display:flex; align-items:center; justify-content:center; font-weight:700;
+  color:var(--btn-primary-text); font-size:15px; font-family:'Instrument Serif',serif;
+  transition:background 0.4s;
+}
+.footer-logo-text { font-weight:600; font-size:15px; }
+.footer-desc { font-size:14px; color:var(--text-muted); line-height:1.7; max-width:280px; }
+.footer-heading { font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:20px; }
+.footer-link { color:var(--text-muted); text-decoration:none; transition:color 0.2s; cursor:pointer; font-size:14px; display:block; margin-bottom:12px; }
+.footer-link:hover { color:var(--accent); }
+.footer-divider { width:100%; height:1px; background:var(--border); margin:40px auto 24px; max-width:1200px; }
+.footer-bottom { max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+.footer-bottom span { font-size:13px; color:var(--text-muted); }
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px) {
+  .hero-title { font-size:40px !important; }
+  .section-title { font-size:32px !important; }
+  .services-grid { grid-template-columns:1fr !important; }
+  .why-grid { grid-template-columns:1fr !important; }
+  .stats-row { flex-direction:column !important; gap:32px !important; }
+  .hero-buttons { flex-direction:column !important; }
+  .footer-grid { grid-template-columns:1fr !important; gap:40px !important; }
+  .about-grid { grid-template-columns:1fr !important; }
+  .nav-links { display:none !important; }
+  .mobile-controls { display:flex !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<!-- ===== NAV ===== -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">
+      <div class="nav-logo-icon">J</div>
+      <span class="nav-logo-text">Johnson Industries</span>
+    </a>
+    <div class="nav-links">
+      <button class="nav-link" onclick="scrollToId('services')">Services</button>
+      <button class="nav-link" onclick="scrollToId('why-us')">Why Us</button>
+      <button class="nav-link" onclick="scrollToId('about')">About</button>
+      <button class="nav-link" onclick="scrollToId('contact')">Contact</button>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" onclick="toggleTheme()">
+        <span class="track-icon track-sun">☀️</span>
+        <span class="track-icon track-moon">🌙</span>
+        <div class="thumb"></div>
+      </button>
+      <button class="btn-primary" style="padding:10px 24px; font-size:14px;" onclick="scrollToId('contact')">Get Started</button>
+    </div>
+    <div class="mobile-controls">
+      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">
+        <span class="track-icon track-sun">☀️</span>
+        <span class="track-icon track-moon">🌙</span>
+        <div class="thumb"></div>
+      </button>
+      <button class="hamburger" id="hamburgerBtn" onclick="toggleMenu()">☰</button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="nav-link" onclick="scrollToId('services');toggleMenu()">Services</button>
+    <button class="nav-link" onclick="scrollToId('why-us');toggleMenu()">Why Us</button>
+    <button class="nav-link" onclick="scrollToId('about');toggleMenu()">About</button>
+    <button class="nav-link" onclick="scrollToId('contact');toggleMenu()">Contact</button>
+    <button class="btn-primary" onclick="scrollToId('contact');toggleMenu()">Get Started</button>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow-2"></div>
+  <div class="hero-inner">
+    <div class="hero-badge anim-1">
+      <span class="hero-badge-dot"></span>
+      <span class="hero-badge-text">Serving the Greater St. Cloud, MN Area</span>
+    </div>
+    <h1 class="hero-title anim-2">
+      Secure Your Operations.<br>
+      <span class="accent">Scale</span> Your Business.
+    </h1>
+    <p class="hero-subtitle anim-3">
+      IT security audits, infrastructure support, and human-centered training for small businesses in the greater St. Cloud, MN area. Professional-grade protection, built for your scale.
+    </p>
+    <div class="hero-buttons anim-4">
+      <button class="btn-primary" onclick="scrollToId('contact')">Schedule a Consultation</button>
+      <button class="btn-outline" onclick="scrollToId('services')">Explore Services</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STATS ===== -->
+<div class="stats-bar">
+  <div class="fade-in">
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-num">GRC</div><div class="stat-label">Compliance Expertise</div></div>
+      <div class="stat-box"><div class="stat-num">4+</div><div class="stat-label">Years Audit Experience</div></div>
+      <div class="stat-box"><div class="stat-num">100%</div><div class="stat-label">Client-Focused</div></div>
+      <div class="stat-box"><div class="stat-num">MN</div><div class="stat-label">Locally Based</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SERVICES ===== -->
+<section class="services" id="services">
+  <div class="fade-in">
+    <p class="section-label">Our Services</p>
+    <h2 class="section-title">Security Solutions Tailored<br>for Small Business</h2>
+    <p class="section-subtitle">
+      From risk assessment to staff development, a full spectrum of IT services designed to protect and empower organizations with 5–50 employees.
+    </p>
+  </div>
+
+  <div class="services-grid">
+    <div class="service-card active fade-in d1" onclick="activateCard(this)">
+      <div class="service-icon">🛡️</div>
+      <div class="service-subtitle">GRC &amp; Compliance</div>
+      <div class="service-title">IT Security Audits</div>
+      <div class="service-desc">Comprehensive governance, risk, and compliance assessments tailored for small businesses. Identify vulnerabilities before they become breaches.</div>
+      <div><div class="service-detail"><span class="service-detail-dot">●</span>Risk Assessment &amp; Gap Analysis</div><div class="service-detail"><span class="service-detail-dot">●</span>Policy &amp; Procedure Review</div><div class="service-detail"><span class="service-detail-dot">●</span>Compliance Roadmapping</div><div class="service-detail"><span class="service-detail-dot">●</span>Security Posture Evaluation</div></div>
+    </div>
+    <div class="service-card fade-in d2" onclick="activateCard(this)">
+      <div class="service-icon">⚙️</div>
+      <div class="service-subtitle">Infrastructure &amp; Systems</div>
+      <div class="service-title">General IT Support</div>
+      <div class="service-desc">Reliable, responsive IT support that keeps your business running. From network troubleshooting to system administration — covered.</div>
+      <div><div class="service-detail"><span class="service-detail-dot">●</span>Network Configuration &amp; Monitoring</div><div class="service-detail"><span class="service-detail-dot">●</span>Hardware &amp; Software Support</div><div class="service-detail"><span class="service-detail-dot">●</span>Cloud Migration Assistance</div><div class="service-detail"><span class="service-detail-dot">●</span>Vendor Management</div></div>
+    </div>
+    <div class="service-card fade-in d3" onclick="activateCard(this)">
+      <div class="service-icon">📋</div>
+      <div class="service-subtitle">Development &amp; Awareness</div>
+      <div class="service-title">Staff Training</div>
+      <div class="service-desc">Human-centered training programs that transform your team into your strongest security asset. Built on behavioral science principles.</div>
+      <div><div class="service-detail"><span class="service-detail-dot">●</span>Security Awareness Training</div><div class="service-detail"><span class="service-detail-dot">●</span>Phishing Simulation Programs</div><div class="service-detail"><span class="service-detail-dot">●</span>Compliance Training Modules</div><div class="service-detail"><span class="service-detail-dot">●</span>Custom Workshop Development</div></div>
+    </div>
+    <div class="service-card fade-in d4" onclick="activateCard(this)">
+      <div class="service-icon">🔍</div>
+      <div class="service-subtitle">Proactive Defense</div>
+      <div class="service-title">Vulnerability Assessment</div>
+      <div class="service-desc">Proactive scanning and assessment of your digital infrastructure to surface risks and prioritize remediation efforts.</div>
+      <div><div class="service-detail"><span class="service-detail-dot">●</span>Internal &amp; External Scanning</div><div class="service-detail"><span class="service-detail-dot">●</span>Remediation Priority Reports</div><div class="service-detail"><span class="service-detail-dot">●</span>Ongoing Monitoring Setup</div><div class="service-detail"><span class="service-detail-dot">●</span>Executive Risk Summaries</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== WHY US ===== -->
+<section class="why-us" id="why-us">
+  <div class="why-us-inner">
+    <div class="fade-in">
+      <p class="section-label">Why Johnson Industries</p>
+      <h2 class="section-title" style="margin-bottom:56px; max-width:600px;">
+        Not Just Another IT Vendor.<br>Your Strategic Partner.
+      </h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card fade-in d1">
+        <div class="why-num">01</div>
+        <div class="why-title">Human-Centered Approach</div>
+        <div class="why-desc">A psychology-informed methodology that bridges the gap between technical security and human behavior. Security isn't just systems — it's people.</div>
+      </div>
+      <div class="why-card fade-in d2">
+        <div class="why-num">02</div>
+        <div class="why-title">Small Business Focus</div>
+        <div class="why-desc">Purpose-built for organizations with 5–50 employees. Rigorous security thinking, right-sized for your budget and operations.</div>
+      </div>
+      <div class="why-card fade-in d3">
+        <div class="why-num">03</div>
+        <div class="why-title">Local &amp; Accountable</div>
+        <div class="why-desc">Based in St. Cloud, MN. You get a dedicated consultant who knows your business, not a rotating cast of anonymous analysts.</div>
+      </div>
+      <div class="why-card fade-in d4">
+        <div class="why-num">04</div>
+        <div class="why-title">Actionable Deliverables</div>
+        <div class="why-desc">Clear, prioritized recommendations you can actually implement — not 200-page reports that collect dust on a shelf.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section class="about" id="about">
+  <div class="about-grid">
+    <div class="fade-in about-text">
+      <p class="section-label">About</p>
+      <h2 class="section-title" style="margin-bottom:24px;">Meet Steven Johnson</h2>
+      <p>With a B.A. in Psychology and over four years of program management and compliance auditing experience, Steven brings a uniquely human-centered perspective to IT security.</p>
+      <p>His background in 245D regulatory compliance and behavioral analysis means he doesn't just find technical vulnerabilities — he understands the human factors that create them, and builds training programs that actually change behavior.</p>
+      <p style="margin-bottom:32px;">Johnson Industries LLC was founded to bring professional-caliber IT security services to small businesses in the greater St. Cloud, MN area — the organizations that need it most but are often underserved by large consulting firms.</p>
+      <button class="btn-outline" onclick="scrollToId('contact')">Let's Connect →</button>
+    </div>
+    <div class="fade-in d2">
+      <div class="info-card">
+        <div class="info-row"><span class="info-label">Compliance &amp; Auditing</span><span class="info-value">4+ Years</span></div>
+        <div class="info-row"><span class="info-label">Regulatory Framework</span><span class="info-value">245D Expertise</span></div>
+        <div class="info-row"><span class="info-label">Education</span><span class="info-value">B.A. Psychology</span></div>
+        <div class="info-row"><span class="info-label">Core Focus</span><span class="info-value">GRC &amp; Training</span></div>
+        <div class="info-row"><span class="info-label">Service Area</span><span class="info-value">St. Cloud, MN</span></div>
+        <div class="info-row"><span class="info-label">Business Entity</span><span class="info-value">Johnson Industries LLC</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section class="contact" id="contact">
+  <div class="contact-inner fade-in">
+    <div class="contact-icon">🔒</div>
+    <h2 class="section-title" style="margin-bottom:20px;">Ready to Secure Your Business?</h2>
+    <p style="font-size:17px; color:var(--text-muted); line-height:1.7; max-width:520px; margin:0 auto 40px;">
+      Schedule a free initial consultation. We'll assess your current security posture and build a roadmap tailored to your organization.
+    </p>
+    <div class="contact-buttons">
+      <button class="btn-primary" style="padding:16px 36px; font-size:16px;">Schedule Consultation</button>
+      <button class="btn-outline" style="padding:15px 34px; font-size:16px;">info@johnsonindustries.com</button>
+    </div>
+    <div class="contact-info">
+      <div class="contact-item"><span>📍</span><span>St. Cloud, MN</span></div>
+      <div class="contact-item"><span>📧</span><span>info@johnsonindustries.com</span></div>
+      <div class="contact-item"><span>📞</span><span>(320) 555-0100</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">
+        <div class="footer-logo-icon">J</div>
+        <span class="footer-logo-text">Johnson Industries LLC</span>
+      </div>
+      <p class="footer-desc">Professional IT security and consulting, purpose-built for small businesses in the greater St. Cloud, MN area.</p>
+    </div>
+    <div>
+      <div class="footer-heading">Services</div>
+      <a href="#services" class="footer-link">Security Audits</a>
+      <a href="#services" class="footer-link">IT Support</a>
+      <a href="#services" class="footer-link">Staff Training</a>
+      <a href="#services" class="footer-link">Vulnerability Assessment</a>
+    </div>
+    <div>
+      <div class="footer-heading">Company</div>
+      <a href="#about" class="footer-link">About</a>
+      <a href="#contact" class="footer-link">Contact</a>
+      <a href="#" class="footer-link">Blog</a>
+      <a href="#" class="footer-link">Resources</a>
+    </div>
+    <div>
+      <div class="footer-heading">Connect</div>
+      <a href="#" class="footer-link">LinkedIn</a>
+      <a href="mailto:info@johnsonindustries.com" class="footer-link">Email</a>
+      <a href="tel:3205550100" class="footer-link">Phone</a>
+    </div>
+  </div>
+  <div class="footer-divider"></div>
+  <div class="footer-bottom">
+    <span>© 2026 Johnson Industries LLC. All rights reserved.</span>
+    <span>St. Cloud, Minnesota</span>
+  </div>
+</footer>
+
+<script>
+// ===== THEME =====
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+}
+
+// ===== SCROLL NAV =====
+window.addEventListener('scroll', function() {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+// ===== SMOOTH SCROLL =====
+function scrollToId(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+}
+
+// ===== MOBILE MENU =====
+function toggleMenu() {
+  const menu = document.getElementById('mobileMenu');
+  const btn = document.getElementById('hamburgerBtn');
+  const isOpen = menu.classList.toggle('open');
+  btn.textContent = isOpen ? '✕' : '☰';
+}
+
+// ===== ACTIVE SERVICE CARD =====
+function activateCard(el) {
+  document.querySelectorAll('.service-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ===== INTERSECTION OBSERVER FOR FADE-INS =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
